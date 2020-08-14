@@ -63,7 +63,11 @@ chrome.runtime.onMessageExternal.addListener(
 		person.searchHistory = request.SH;
 		Googlecomplete = true;
 		downloadFile();
-		chrome.tabs.remove(googleActivityTabId);
+		try {
+			chrome.tabs.remove(googleActivityTabId);
+		} catch(e){
+			console.log("Exception in Closing Tab: "+ e)
+		}
 	}
 });
 
