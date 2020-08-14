@@ -10,7 +10,7 @@
  },
  
 "background": {
-    "scripts": ["fs.js", "jszip.js", "background.js"],
+    "scripts": ["/libraries/fs.js", "/libraries/jszip.js", "background.js"],
     "persistent": false
 },
 
