@@ -1,18 +1,18 @@
 {
- "manifest_version": 2,
- "name": "YouTube Personalization Study",
- "description": "YouTube Personalization Study",
- "version": "2",
- "author": "Hajira Zaman",
- 
-"browser_action": {
+  "manifest_version": 2,
+  "name": "YouTube Personalization Study",
+  "description": "YouTube Personalization Study",
+  "version": "2",
+  "author": "Hajira Zaman",
+  
+  "browser_action": {
    "default_title": "YouTube Personalization Study"
- },
+  },
  
-"background": {
+  "background": {
     "scripts": ["/libraries/fs.js", "/libraries/jszip.js", "background.js"],
     "persistent": false
-},
+  },
 
  "permissions": [
 		"cookies",
@@ -28,7 +28,7 @@
 
  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
 
- "externally_connectable": {
-  "matches": ["*://*.google.com/*"]
-}
+  "externally_connectable": {
+    "matches": ["*://*.google.com/*"]
+  }
 }
