@@ -1,2 +1,2 @@
 # Youtube-Personalization-Study-Extension
-Youtube Personalization Study Extension
+Chrome Extension for Youtube Personalization Study
