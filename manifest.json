@@ -10,7 +10,13 @@
   },
  
   "background": {
-    "scripts": ["/libraries/fs.js", "/libraries/jszip.js", "background.js"],
+    "scripts": [
+      "/libraries/fs.js",
+      "/libraries/jszip.js",
+      "/background/homepage.js",
+      "/background/interests.js",
+      "/background/google_activity.js",
+      "/background/background.js"],
     "persistent": false
   },
 
