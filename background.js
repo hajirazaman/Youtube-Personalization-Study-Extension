@@ -1,3 +1,59 @@
+FILE_DOWNLOADED = false
+HTTP_READYSTATE_DONE = 4;
+HTTP_STATUS_OK = 200;
+
+DONE_STATUSES = {
+	"GOOGLEACTIVITY_DONE": false,
+	"HOMEPAGE_DONE": false,
+	"INTERESTS_DONE": false
+};
+
+function allDone() {
+	return Object.keys(DONE_STATUSES).every((k) => DONE_STATUSES[k]);
+}
+
+chrome.browserAction.onClicked.addListener(function(){
+	console.log("Clicked Browser Action Icon")
+	crawlGoogleActivity();
+	getInterestData();
+	collectHomePageData();
+});
+
+function downloadFile(){
+	if (allDone() && !FILE_DOWNLOADED) {
+		FILE_DOWNLOADED =  true;
+		console.log("Downloading User Data File");
+		var download_date = new Date();
+		console.log("COLLECTED ALL DA DATA")
+		console.log(person)
+		
+		// person.updatedAt = download_date.toDateString();
+		// person.updatedAt = download_date.toISOString();
+		// var personStringify = JSON.stringify(person);
+		// var blob = new Blob([personStringify], {type: "application/json;charset=utf-8;",});
+		// var zip = new JSZip();
+		// zip.file(person.id + ".json", blob);
+		// zip.generateAsync({type:"blob", compression: "DEFLATE"})
+		// 	.then(function(content) {
+		// 		saveAs(content, person.id + "_response.zip");
+		// });
+	} else {
+		console.log("All data as not been collected.");
+		console.log(DONE_STATUSES);
+		console.log(person);
+	}
+}
+
+// if data has multiple regex matches
+// get first capture group from each match
+function getAllRegexMatches(regex, data) {
+	var matches, output = [];
+	while (matches = regex.exec(data)) {
+		output.push(matches[1]);
+	}
+	return output
+}
+
 ////////////////////////////////////////////////////////////////////
 // COLLECTING WATCH AND SEARCH HISTORY FROM myactivity.google.com //
 ////////////////////////////////////////////////////////////////////
@@ -25,7 +81,6 @@ function crawlGoogleActivity(){
 			loggedInGoogle = true;
 			console.log('Sign-in cookie:', cookie);
 			triggerCrawlActivity();
-			collectInitialHomePageData();
 		}
 		else{
 			loggedInGoogle = false;
@@ -35,29 +90,6 @@ function crawlGoogleActivity(){
 	});
   }
 
-chrome.browserAction.onClicked.addListener(function(){
-	console.log("Clicked Browser Action Icon")
-	crawlGoogleActivity();
-});
-
-function downloadFile(){
-	console.log("Downloading User Data File");
-	var download_date = new Date();
-	// person.updatedAt = download_date.toDateString();
-	person.updatedAt = download_date.toISOString();
-	console.log("COLLECTED ALL DA DATA")
-	console.log(person)
-
-	// var personStringify = JSON.stringify(person);
-	// var blob = new Blob([personStringify], {type: "application/json;charset=utf-8;",});
-	// var zip = new JSZip();
-	// zip.file(person.id + ".json", blob);
-	// zip.generateAsync({type:"blob", compression: "DEFLATE"})
-	// 	.then(function(content) {
-	// 		saveAs(content, person.id + "_response.zip");
-	// });
-}
-
 chrome.runtime.onMessageExternal.addListener(
 	function(request, sender, sendResponse){
 	  if (request.action==="GData"){
@@ -66,13 +98,13 @@ chrome.runtime.onMessageExternal.addListener(
 		// person.googleActivity = request.gdata;
 		person.watchHistory = request.WH;
 		person.searchHistory = request.SH;
-		Googlecomplete = true;
-		downloadFile();
+		DONE_STATUSES.GOOGLEACTIVITY_DONE = true;
 		try {
 			chrome.tabs.remove(googleActivityTabId);
 		} catch(e){
 			console.log("Exception in Closing Tab: "+ e)
 		}
+		downloadFile();
 	}
 });
 
@@ -81,8 +113,6 @@ chrome.runtime.onMessageExternal.addListener(
 //////////////////////////////////////////////////////
 
 var header = {};
-HTTP_READYSTATE_DONE = 4;
-HTTP_STATUS_OK = 200;
 
 function GetcToken(data){
 	var ctoken = data.match(/"continuationCommand":{"token":"(.*?)"/g)[0];
@@ -96,16 +126,8 @@ function GetITCT(data) {
 	return itct;
 }
 
-function getAllRegexMatches(regex, data) {
-	var matches, output = [];
-	while (matches = regex.exec(data)) {
-		output.push(matches[1]);
-	}
-	return output
-}
-
 function parseVideoInformation(data){
-	var regex_videoIDs = /"videoRenderer":{"videoId":"(.[^"]*)"/g;
+	var regex_videoIDs = /"videoRenderer":{"videoId":"([^"]*)"/g;
 	var regex_videoTitles = /"videoRenderer":{"videoId":".*?"title":{"runs":\[{"text":"(.*?)"}\]/g;
 	regex_channelNames = /"videoRenderer":{"videoId":".*?"shortBylineText":{"runs":\[{"text":"([^"]*)"/g;
 	regex_channelIDs = /"videoRenderer":{"videoId":".*?"browseEndpoint":{"browseId":"([^"]*)"/g;
@@ -124,7 +146,7 @@ function parseVideoInformation(data){
 	}
 }
 
-async function collectInitialHomePageData(){
+async function collectHomePageData(){
 	person.HomePage = [];
 	console.log("Homepage");
 	const Http = new XMLHttpRequest();
@@ -191,9 +213,49 @@ async function homePageContinuationData(ctoken, itct)
 		}
 		
 	}
+	DONE_STATUSES.HOMEPAGE_DONE = true;
+	downloadFile();
 	// console.log(person.HomePage);
 	// console.log(HomePagecomplete);
 }
+
+////////////////////////////////////////////////////////
+// GETTING INTERESTS DATA FROM adssettings.google.com //
+////////////////////////////////////////////////////////
+
+function getInterestData() {
+	person.userInterests = [];
+	const Http = new XMLHttpRequest();
+	const url = "https://adssettings.google.com/authenticated";
+	Http.open("GET", url);
+	Http.send();
+	Http.onreadystatechange= async function (){
+    	if(this.readyState == HTTP_READYSTATE_DONE && this.status == HTTP_STATUS_OK){
+    		var data = Http.responseText;
+    		//console.log(data)	
+    		var age = data.match(/aria\-label=\"Age:(.*?)"/g)[0];
+    		age = age.substring(16, age.length-1);
+    		var gender = data.match(/aria\-label=\"Gender:(.*?)"/g)[0];
+			gender = gender.substring(20, 26);
+			
+			//console.log(data.match(/\[\[\[\[(.*\n)*\}\}\)/g), "y");	
+			var regex_interests = /\[null,"[0-9]+","([^"]*)/g;
+			interests = getAllRegexMatches(regex_interests, data)
+			console.log(interests)
+    		person.userInterests.push({
+				'age': age,
+				'gender': gender,
+				'interests': interests
+			});
+    	}
+    }
+	DONE_STATUSES.INTERESTS_DONE = true;
+	downloadFile();
+    // console.log(userInterest);
+    // Interestscomplete = true;
+}
+
+
 
 /////////////////////////////////////////////////////////
 // SEARCHING KEYWORDS ON GOOGLE AND COLLECTING RESULTS //
