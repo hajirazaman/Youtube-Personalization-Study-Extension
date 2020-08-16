@@ -3,6 +3,8 @@
 // GETTING INTERESTS DATA FROM adssettings.google.com //
 ////////////////////////////////////////////////////////
 
+// same scope as all the background scripts
+
 function getInterestData() {
 	person.userInterests = [];
 	const Http = new XMLHttpRequest();
@@ -17,11 +19,10 @@ function getInterestData() {
     		age = age.substring(16, age.length-1);
     		var gender = data.match(/aria\-label=\"Gender:(.*?)"/g)[0];
 			gender = gender.substring(20, 26);
-			
 			//console.log(data.match(/\[\[\[\[(.*\n)*\}\}\)/g), "y");	
 			var regex_interests = /\[null,"[0-9]+","([^"]*)/g;
 			interests = getAllRegexMatches(regex_interests, data)
-			console.log(interests)
+			// console.log(interests)
     		person.userInterests.push({
 				'age': age,
 				'gender': gender,
@@ -32,12 +33,4 @@ function getInterestData() {
 	DONE_STATUSES.INTERESTS_DONE = true;
 	downloadFile();
     // console.log(userInterest);
-    // Interestscomplete = true;
 }
-
-
-
-/////////////////////////////////////////////////////////
-// SEARCHING KEYWORDS ON GOOGLE AND COLLECTING RESULTS //
-/////////////////////////////////////////////////////////
-

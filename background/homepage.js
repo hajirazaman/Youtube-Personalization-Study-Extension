@@ -2,6 +2,8 @@
 // COLLECTING INITIAL HOMEPAGE I.E youtube.com DATA //
 //////////////////////////////////////////////////////
 
+// same scope as all the background scripts
+
 var header = {};
 
 function GetcToken(data){

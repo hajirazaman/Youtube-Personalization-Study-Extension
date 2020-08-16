@@ -2,13 +2,15 @@
 // COLLECTING WATCH AND SEARCH HISTORY FROM myactivity.google.com //
 ////////////////////////////////////////////////////////////////////
 
+// same scope as all the background scripts
+
 var person = new Object();
 person.id = Math.random().toString().slice(2,26);
 loggedInGoogle = false;
 googleActivityTabId = null
 
 // this will trigger content_script.js due to condition in manifest
-function triggerCrawlActivity(){
+function triggerCrawlGoogleActivity(){
 	console.log("Crawling Google Activity");
 	// chrome.tabs.create(tab.id, {"url": "https://myactivity.google.com/item"}, function(tab){})
 	chrome.tabs.create({
@@ -18,21 +20,6 @@ function triggerCrawlActivity(){
 		googleActivityTabId = tab.id;
 	});
 }
-
-function crawlGoogleActivity(){
-	chrome.cookies.get({url:'https://accounts.google.com', name:'LSID'}, function(cookie){
-		if (cookie) {
-			loggedInGoogle = true;
-			console.log('Sign-in cookie:', cookie);
-			triggerCrawlActivity();
-		}
-		else{
-			loggedInGoogle = false;
-			console.log("not signed in");
-			alert("Please log in to your Google Account use the Extention.")
-		}
-	});
-  }
 
 chrome.runtime.onMessageExternal.addListener(
 	function(request, sender, sendResponse){
