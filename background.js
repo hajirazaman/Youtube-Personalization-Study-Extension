@@ -48,14 +48,14 @@ function downloadFile(){
 	console.log("COLLECTED ALL DA DATA")
 	console.log(person)
 
-	var personStringify = JSON.stringify(person);
-	var blob = new Blob([personStringify], {type: "application/json;charset=utf-8;",});
-	var zip = new JSZip();
-	zip.file(person.id + ".json", blob);
-	zip.generateAsync({type:"blob", compression: "DEFLATE"})
-		.then(function(content) {
-			saveAs(content, person.id + "_response.zip");
-	});
+	// var personStringify = JSON.stringify(person);
+	// var blob = new Blob([personStringify], {type: "application/json;charset=utf-8;",});
+	// var zip = new JSZip();
+	// zip.file(person.id + ".json", blob);
+	// zip.generateAsync({type:"blob", compression: "DEFLATE"})
+	// 	.then(function(content) {
+	// 		saveAs(content, person.id + "_response.zip");
+	// });
 }
 
 chrome.runtime.onMessageExternal.addListener(
@@ -67,7 +67,7 @@ chrome.runtime.onMessageExternal.addListener(
 		person.watchHistory = request.WH;
 		person.searchHistory = request.SH;
 		Googlecomplete = true;
-		// downloadFile();
+		downloadFile();
 		try {
 			chrome.tabs.remove(googleActivityTabId);
 		} catch(e){
@@ -96,37 +96,46 @@ function GetITCT(data) {
 	return itct;
 }
 
+function getAllRegexMatches(regex, data) {
+	var matches, output = [];
+	while (matches = regex.exec(data)) {
+		output.push(matches[1]);
+	}
+	return output
+}
+
 function parseVideoInformation(data){
-	var videos = data.match(/"title":{"runs":\[{"text":".[^}]*}\]/g);	
-	var videoID = data.match(/"videoRenderer":{"videoId":".[^"]*"/g);
-	var channel = data.match(/"shortBylineText":{".[^}]*}}/g);
-	var channelName = data.match(/{\\"text\\":\\".[^"]*\\"/g); 
-	var channelID = data.match(/{\\"url\\":\\".[^"]*\\"/g);
-	var i = 0;
-	while(i != 24) {
-		//console.log(channel[i]);
+	var regex_videoIDs = /"videoRenderer":{"videoId":"(.[^"]*)"/g;
+	var regex_videoTitles = /"videoRenderer":{"videoId":".*?"title":{"runs":\[{"text":"(.*?)"}\]/g;
+	regex_channelNames = /"videoRenderer":{"videoId":".*?"shortBylineText":{"runs":\[{"text":"([^"]*)"/g;
+	regex_channelIDs = /"videoRenderer":{"videoId":".*?"browseEndpoint":{"browseId":"([^"]*)"/g;
+	videoIDs = getAllRegexMatches(regex_videoIDs, data);
+	videoTitles = getAllRegexMatches(regex_videoTitles, data);
+	channelNames = getAllRegexMatches(regex_channelNames, data);
+	channelIDs = getAllRegexMatches(regex_channelIDs, data);
+
+	for (i=0; i<videoTitles.length; i++) {
 		person.HomePage.push({
-			'name': videos[i],
-			'channel': channelName[i],
-			'id': videoID[i],
-			'channelID': channelID[i],
-			'thej': JSON.stringify(myJson)
+			'id': videoIDs[i],
+			'name': videoTitles[i],
+			'channelName': channelNames[i],
+			'channelID': channelIDs[i],
 		});
-		i += 1;
 	}
 }
 
-function collectInitialHomePageData(){
+async function collectInitialHomePageData(){
 	person.HomePage = [];
 	console.log("Homepage");
 	const Http = new XMLHttpRequest();
 	const url = "https://www.youtube.com";
+
 	Http.open("GET", url);
 	Http.send();
 	Http.onreadystatechange = async function (){
     	if(this.readyState == HTTP_READYSTATE_DONE && this.status == HTTP_STATUS_OK){
-			var data = Http.responseText;
-    		console.log(data);
+			var data = this.responseText;
+			parseVideoInformation(data);
     		header['accept'] = "*/*";
 			header['x-spf-previous'] = "https://www.youtube.com/";
 			header['x-spf-referer'] = "https://www.youtube.com/";
@@ -153,18 +162,10 @@ async function homePageContinuationData(ctoken, itct)
 
 	while(true) {
 		var url = "https://www.youtube.com/browse_ajax?";
-  		url = url.concat("ctoken=", ctoken, "&", "continuation=", continuation, "&", "itct=", itct);
+		url = url.concat("ctoken=", ctoken, "&", "continuation=", continuation, "&", "itct=", itct);
 	  	const response = await fetch(url, {
 	    	credentials: 'same-origin', // include, *same-origin, omit
-	    	headers: {
-	    		'accept':"*/*",
-	    		'x-spf-previous':"https://www.youtube.com/",
-	    		'x-spf-referer':"https://www.youtube.com/",
-	    		'x-youtube-client-name':header['x-youtube-client-name'],
-		    	'x-youtube-client-version':header['x-youtube-client-version'],
-	    		'x-youtube-identity-token':header['x-youtube-identity-token'],
-	    		'x-youtube-page-cl':header['x-youtube-page-cl'],
-	    		'x-youtube-variants-checksum':header['x-youtube-variants-checksum']},
+	    	headers: header,
 		    referrer: "https://www.youtube.com/",
 	    	referrerPolicy:"origin-when-cross-origin",
 	    	body:null,
@@ -173,29 +174,9 @@ async function homePageContinuationData(ctoken, itct)
 	  	});
   
   		const myJson = await response.json();
-  		// console.log(myJson);
-  		
 		try{
 			parseVideoInformation(JSON.stringify(myJson));
-			var videos = JSON.stringify(myJson).match(/"title":{"runs":\[{"text":".[^}]*}\]/g);	
-			var videoID = JSON.stringify(myJson).match(/"videoRenderer":{"videoId":".[^"]*"/g);
-			var channel = JSON.stringify(myJson).match(/"shortBylineText":{".[^}]*}}/g);
-			var channelName = JSON.stringify(channel).match(/{\\"text\\":\\".[^"]*\\"/g); 
-			var channelID = JSON.stringify(channel).match(/{\\"url\\":\\".[^"]*\\"/g);
-			var i = 0;
-			while(i != 24) {
-				//console.log(channel[i]);
-				person.HomePage.push({
-    				'name': videos[i],
-    				'channel': channelName[i],
-    				'id': videoID[i],
-					'channelID': channelID[i],
-					'thej': JSON.stringify(myJson)
-				});
-				i += 1;
-			}
-		} 
-		catch{
+		} catch{
 			person.HomePage.push({
     			'PageInfo': myJson
 			});
@@ -205,15 +186,13 @@ async function homePageContinuationData(ctoken, itct)
 			ctoken = GetcToken(JSON.stringify(myJson));
 			continuation = ctoken;
 			itct = GetITCT(JSON.stringify(myJson));
-		}
-		catch {
+		} catch {
 			break;
 		}
 		
 	}
-	console.log(person.HomePage);
-	// HomePagecomplete = true;
-	//console.log(HomePagecomplete);
+	// console.log(person.HomePage);
+	// console.log(HomePagecomplete);
 }
 
 /////////////////////////////////////////////////////////
