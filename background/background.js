@@ -43,19 +43,6 @@ chrome.cookies.onChanged.addListener(async function(info) {
 		await sleep(100);
 	}
 });
-	// checking if signed into google
-	// if(cookie_info.indexOf("accounts.google.com") !== -1 && cookie_info.indexOf("LSID") !== -1){
-	// 	if(info.removed === true){
-	// 		if (loggedInGoogle) {
-	// 			if (!FILE_DOWNLOADED) alert("Data Not Collected, Please Log Back In!");
-	// 		}
-	// 		loggedInGoogle = false;
-	// 		console.log("Not Signed in  Google");
-	// 	} else {
-	// 		loggedInGoogle = true;
-	// 		console.log("Signed in  Google");    
-	// 	}
-	// }
 
 chrome.browserAction.onClicked.addListener(async function(){
 	FILE_DOWNLOADED = false
@@ -89,7 +76,7 @@ function downloadFile(){
 		// person.updatedAt = download_date.toDateString();
 		console.log("Downloading User Data File");
 		console.log(person)
-		// downloadZippedJson(person);
+		downloadZippedJson(person);
 		console.log("COLLECTED ALL DA DATA")
 		
 	} else {
