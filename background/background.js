@@ -9,53 +9,65 @@ DONE_STATUSES = {
 	"INTERESTS_DONE": false
 };
 
+function sleep(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 function allDone() {
 	return Object.keys(DONE_STATUSES).every((k) => DONE_STATUSES[k]);
 }
 
-function loggedInGoogleCheck(){
+function loggedInGoogleCheck(extentionOnClick){
 	chrome.cookies.get({url:'https://accounts.google.com', name:'LSID'}, function(cookie){
 		if (cookie) {
 			loggedInGoogle = true;
 			console.log('Sign-in cookie:', cookie);
-			triggerCrawlGoogleActivity();
-			getInterestData();
-			collectHomePageData();
 		}
-		else{
+		else {
+			if (extentionOnClick)
+				alert("Please log in to your Google Account to use the Extention.");
+			if (loggedInGoogle)
+				alert("You Logged Out of your Google Account. Please log back in to use the Extention.");
 			loggedInGoogle = false;
 			console.log("not signed in");
-			alert("Please log in to your Google Account use the Extention.")
+			// alert("Please log in to your Google Account use the Extention.")
 		}
 	});
 }
 
-// chrome.cookies.onChanged.addListener(function(info) {
-// 	var cookie_info = JSON.stringify(info)
-// 	// checking if signed into google
-// 	   if(cookie_info.indexOf("accounts.google.com") !== -1 && cookie_info.indexOf("LSID") !== -1){
-// 		  if(info.removed === true){
-// 			  loggedInGoogle = false;
-// 			  console.log("Not Signed in  Google");
-// 			  alert("Please log in to your Google Account to use the Extention.")
-// 		  } else {
-// 			  loggedInGoogle = true;
-// 			  console.log("Signed in  Google");    
-// 		  }
-// 	  }
-//   }
-// );
-
-chrome.browserAction.onClicked.addListener(function(){
-	console.log("Clicked Browser Action Icon")
-	loggedInGoogleCheck();
-	// if (loggedInGoogle) {
-	// 	triggerCrawlGoogleActivity();
-	// 	getInterestData();
-	// 	collectHomePageData();
-	// } else {
-	// 	console.log("Need to Log In")
+chrome.cookies.onChanged.addListener(async function(info) {
+	var cookie_info = JSON.stringify(info);
+	console.log(cookie_info);
+	loggedInGoogleCheck(false);
+	while (!loggedInGoogle) {
+		await sleep(100);
+	}
+});
+	// checking if signed into google
+	// if(cookie_info.indexOf("accounts.google.com") !== -1 && cookie_info.indexOf("LSID") !== -1){
+	// 	if(info.removed === true){
+	// 		if (loggedInGoogle) {
+	// 			if (!FILE_DOWNLOADED) alert("Data Not Collected, Please Log Back In!");
+	// 		}
+	// 		loggedInGoogle = false;
+	// 		console.log("Not Signed in  Google");
+	// 	} else {
+	// 		loggedInGoogle = true;
+	// 		console.log("Signed in  Google");    
+	// 	}
 	// }
+
+chrome.browserAction.onClicked.addListener(async function(){
+	FILE_DOWNLOADED = false
+	console.log("Clicked Browser Action Icon")
+	loggedInGoogleCheck(true);
+	while (!loggedInGoogle) {
+		await sleep(100);
+	}
+	await sleep(5000);
+	triggerCrawlGoogleActivity();
+	getInterestData();
+	collectHomePageData();
 });
 
 function downloadZippedJson(json_data) {

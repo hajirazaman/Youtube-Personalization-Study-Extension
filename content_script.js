@@ -19,7 +19,7 @@ var crawl = '(' +
       return new Promise(resolve => setTimeout(resolve, ms));
     }
     console.log("EXID: "+ extensionId)
-    var NumberOfDaysToGoBack = 1; //change it back to 180
+    var NumberOfDaysToGoBack = 180; //change it back to 180
 
     var G_activity = [];
     var Watch_History = [];
