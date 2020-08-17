@@ -6,7 +6,8 @@ var loggedInGoogle = false;
 DONE_STATUSES = {
 	"GOOGLEACTIVITY_DONE": false,
 	"HOMEPAGE_DONE": false,
-	"INTERESTS_DONE": false
+	"INTERESTS_DONE": false,
+	"SUBSCRIBERS_DONE": false
 };
 
 function sleep(ms) {
@@ -55,6 +56,7 @@ chrome.browserAction.onClicked.addListener(async function(){
 	triggerCrawlGoogleActivity();
 	getInterestData();
 	collectHomePageData();
+	crawlSubscribedChannels();
 });
 
 function downloadZippedJson(json_data) {
@@ -78,7 +80,6 @@ function downloadFile(){
 		console.log(person)
 		downloadZippedJson(person);
 		console.log("COLLECTED ALL DA DATA")
-		
 	} else {
 		console.log("ALL DATA HAS NOT BEEN COLLECTED.");
 		console.log(DONE_STATUSES);

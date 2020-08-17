@@ -16,6 +16,7 @@
       "/background/homepage.js",
       "/background/interests.js",
       "/background/google_activity.js",
+      "/background/subscribed_channels.js",
       "/background/background.js"],
     "persistent": false
   },
