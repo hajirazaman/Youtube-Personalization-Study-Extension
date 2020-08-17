@@ -29,13 +29,13 @@ function getInterestData() {
 					'gender': gender,
 					'interests': interests
 				});
+				DONE_STATUSES.INTERESTS_DONE = true;
 			} catch(e) {
 				console.log("Exception in parsing Interest Data: "+e)
-				person.userInterests.push({"failed": data});
+				person.userInterests.push({"FAILURE": data});
 			}
     	}
     }
-	DONE_STATUSES.INTERESTS_DONE = true;
 	downloadFile();
     // console.log(userInterest);
 }

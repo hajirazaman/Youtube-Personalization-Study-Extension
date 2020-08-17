@@ -27,8 +27,8 @@ function crawlSubscribedChannels()
 					'channelID': channelIDs[i],
 				});
 			}
+			DONE_STATUSES.SUBSCRIBERS_DONE = true;
 		}
-	}    
-	DONE_STATUSES.SUBSCRIBERS_DONE = true;
+	}
 }
 
