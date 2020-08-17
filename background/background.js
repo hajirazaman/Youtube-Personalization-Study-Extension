@@ -26,7 +26,7 @@ function loggedInGoogleCheck(extentionOnClick){
 		else {
 			if (extentionOnClick)
 				alert("Please log in to your Google Account to use the Extention.");
-			if (loggedInGoogle)
+			else if (loggedInGoogle)
 				alert("You Logged Out of your Google Account. Please log back in to use the Extention.");
 			loggedInGoogle = false;
 			console.log("not signed in");

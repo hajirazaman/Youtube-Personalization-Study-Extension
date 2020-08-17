@@ -21,20 +21,24 @@ function GetITCT(data) {
 function parseVideoInformation(data){
 	var regex_videoIDs = /"videoRenderer":{"videoId":"([^"]*)"/g;
 	var regex_videoTitles = /"videoRenderer":{"videoId":".*?"title":{"runs":\[{"text":"(.*?)"}\]/g;
-	regex_channelNames = /"videoRenderer":{"videoId":".*?"shortBylineText":{"runs":\[{"text":"([^"]*)"/g;
-	regex_channelIDs = /"videoRenderer":{"videoId":".*?"browseEndpoint":{"browseId":"([^"]*)"/g;
-	videoIDs = getAllRegexMatches(regex_videoIDs, data);
-	videoTitles = getAllRegexMatches(regex_videoTitles, data);
-	channelNames = getAllRegexMatches(regex_channelNames, data);
-	channelIDs = getAllRegexMatches(regex_channelIDs, data);
-
-	for (i=0; i<videoTitles.length; i++) {
-		person.HomePage.push({
-			'id': videoIDs[i],
-			'name': videoTitles[i],
-			'channelName': channelNames[i],
-			'channelID': channelIDs[i],
-		});
+	var regex_channelNames = /"videoRenderer":{"videoId":".*?"shortBylineText":{"runs":\[{"text":"([^"]*)"/g;
+	var regex_channelIDs = /"videoRenderer":{"videoId":".*?"browseEndpoint":{"browseId":"([^"]*)"/g;
+	try {
+		videoIDs = getAllRegexMatches(regex_videoIDs, data);
+		videoTitles = getAllRegexMatches(regex_videoTitles, data);
+		channelNames = getAllRegexMatches(regex_channelNames, data);
+		channelIDs = getAllRegexMatches(regex_channelIDs, data);
+		for (i=0; i<videoTitles.length; i++) {
+			person.HomePage.push({
+				'id': videoIDs[i],
+				'name': videoTitles[i],
+				'channelName': channelNames[i],
+				'channelID': channelIDs[i],
+			});
+		}
+	} catch(e) {
+		console.log("Exception in pasing Homepage: "+e);
+		person.HomePage.push({"FAILURE": data})
 	}
 }
 
