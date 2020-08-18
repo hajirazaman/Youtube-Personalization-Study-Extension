@@ -67,7 +67,6 @@ async function collectHomePageData(){
 			header['x-youtube-identity-token'] = idToken.substring(12, idToken.length-1);
 			header['x-youtube-page-cl'] = pageCl.substring(10, pageCl.length-1);
 			header['x-youtube-variants-checksum'] = checksum.substring(21 ,checksum.length-1);	
-			console.log("Downloading Data...");		
 			homePageContinuationData(GetcToken(data), GetITCT(data));
     	}
 	}

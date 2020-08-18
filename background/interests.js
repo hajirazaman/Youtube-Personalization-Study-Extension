@@ -36,6 +36,6 @@ function getInterestData() {
 			}
     	}
     }
-	downloadFile();
+	// downloadFile();
     // console.log(userInterest);
 }

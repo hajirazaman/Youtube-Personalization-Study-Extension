@@ -17,6 +17,7 @@
       "/background/interests.js",
       "/background/google_activity.js",
       "/background/subscribed_channels.js",
+      "/background/keyword_search_experiment.js",
       "/background/background.js"],
     "persistent": false
   },

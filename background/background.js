@@ -1,3 +1,6 @@
+var person = new Object();
+person.id = Math.random().toString().slice(2,26);
+
 FILE_DOWNLOADED = false
 HTTP_READYSTATE_DONE = 4;
 HTTP_STATUS_OK = 200;
@@ -7,7 +10,8 @@ DONE_STATUSES = {
 	"GOOGLEACTIVITY_DONE": false,
 	"HOMEPAGE_DONE": false,
 	"INTERESTS_DONE": false,
-	"SUBSCRIBERS_DONE": false
+	"SUBSCRIBERS_DONE": false,
+	"SEARCHDATA_DONE": false
 };
 
 function sleep(ms) {
@@ -36,6 +40,7 @@ function loggedInGoogleCheck(extentionOnClick){
 	});
 }
 
+// lagging out in the middle of collecting data
 chrome.cookies.onChanged.addListener(async function(info) {
 	var cookie_info = JSON.stringify(info);
 	console.log(cookie_info);
@@ -57,6 +62,11 @@ chrome.browserAction.onClicked.addListener(async function(){
 	getInterestData();
 	collectHomePageData();
 	crawlSubscribedChannels();
+	// getSearchData("HELLO & bello");
+	while (!allDone()) {
+		await sleep(5000);
+	}
+	downloadFile();
 });
 
 function downloadZippedJson(json_data) {
@@ -71,6 +81,7 @@ function downloadZippedJson(json_data) {
 }
 
 function downloadFile(){
+	console.log("Downloading Data...");		
 	if (allDone() && !FILE_DOWNLOADED) {
 		FILE_DOWNLOADED =  true; // to prevent async downloads
 		var download_date = new Date();

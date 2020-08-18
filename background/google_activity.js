@@ -4,8 +4,6 @@
 
 // same scope as all the background scripts
 
-var person = new Object();
-person.id = Math.random().toString().slice(2,26);
 loggedInGoogle = false;
 googleActivityTabId = null
 
@@ -35,6 +33,6 @@ chrome.runtime.onMessageExternal.addListener(
 		} catch(e){
 			console.log("Exception in Closing Tab: "+ e)
 		}
-		downloadFile();
+		// downloadFile();
 	}
 });
