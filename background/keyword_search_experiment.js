@@ -1,6 +1,6 @@
-/////////////////////////////////////////////////////////
-// SEARCHING KEYWORDS ON GOOGLE AND COLLECTING RESULTS //
-/////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////
+// SEARCHING KEYWORDS ON YOUTUBE AND COLLECTING RESULTS //
+//////////////////////////////////////////////////////////
 
 // same scope as all the background scripts
 
@@ -22,7 +22,6 @@ function getSearchData(search_string) {
     
                 // )
 				DONE_STATUSES.SEARCHDATA_DONE = true;
-				downloadFile();
 			} catch(e) {
 				console.log("Exception in parsing Interest Data: "+e)
 				person.searchData.push({"FAILURE": data});
