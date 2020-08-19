@@ -11,7 +11,7 @@ DONE_STATUSES = {
 	"HOMEPAGE_DONE": false,
 	"INTERESTS_DONE": false,
 	"SUBSCRIBERS_DONE": false,
-	"SEARCHDATA_DONE": false
+	"SEARCHDATA_DONE": true
 };
 
 function sleep(ms) {
@@ -64,6 +64,7 @@ chrome.browserAction.onClicked.addListener(async function(){
 	crawlSubscribedChannels();
 	// getSearchData("HELLO & bello");
 	while (!allDone()) {
+		console.log(DONE_STATUSES);
 		await sleep(5000);
 	}
 	downloadFile();

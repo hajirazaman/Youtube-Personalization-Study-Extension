@@ -109,7 +109,7 @@ async function homePageContinuationData(ctoken, itct)
 		
 	}
 	DONE_STATUSES.HOMEPAGE_DONE = true;
-	downloadFile();
+	// downloadFile();
 	// console.log(person.HomePage);
 	// console.log(HomePagecomplete);
 }

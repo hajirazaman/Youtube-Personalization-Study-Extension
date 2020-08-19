@@ -11,14 +11,15 @@
  
   "background": {
     "scripts": [
+      "/background/background.js",
       "/libraries/fs.js",
       "/libraries/jszip.js",
       "/background/homepage.js",
       "/background/interests.js",
       "/background/google_activity.js",
       "/background/subscribed_channels.js",
-      "/background/keyword_search_experiment.js",
-      "/background/background.js"],
+      "/background/keyword_search_experiment.js"
+    ],
     "persistent": false
   },
 
