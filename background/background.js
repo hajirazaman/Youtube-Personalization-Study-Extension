@@ -10,8 +10,7 @@ DONE_STATUSES = {
 	"GOOGLEACTIVITY_DONE": false,
 	"HOMEPAGE_DONE": false,
 	"INTERESTS_DONE": false,
-	"SUBSCRIBERS_DONE": false,
-	"SEARCHDATA_DONE": true
+	"SUBSCRIBERS_DONE": false
 };
 
 function sleep(ms) {
@@ -26,7 +25,7 @@ function loggedInGoogleCheck(extentionOnClick){
 	chrome.cookies.get({url:'https://accounts.google.com', name:'LSID'}, function(cookie){
 		if (cookie) {
 			loggedInGoogle = true;
-			console.log('Sign-in cookie:', cookie);
+			// console.log('Sign-in cookie:', cookie);
 		}
 		else {
 			if (extentionOnClick)
@@ -62,7 +61,6 @@ chrome.browserAction.onClicked.addListener(async function(){
 	getInterestData();
 	collectHomePageData();
 	crawlSubscribedChannels();
-	// getSearchData("HELLO & bello");
 	while (!allDone()) {
 		console.log(DONE_STATUSES);
 		await sleep(5000);

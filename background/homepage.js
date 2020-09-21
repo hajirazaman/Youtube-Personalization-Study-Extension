@@ -94,8 +94,10 @@ async function homePageContinuationData(ctoken, itct)
 		try{
 			parseVideoInformation(JSON.stringify(myJson));
 		} catch{
+			console.log(myJson)
 			person.HomePage.push({
-    			'PageInfo': myJson
+				'id': null,
+				'PageInfo': myJson
 			});
 		}
 			

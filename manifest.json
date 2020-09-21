@@ -6,9 +6,16 @@
   "author": "Hajira Zaman",
   
   "browser_action": {
-   "default_title": "YouTube Personalization Study"
+   "default_title": "YouTube Personalization Study",
+   "default_icon": "icon.png"
   },
- 
+
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+   "128": "icon.png"
+  },
+
   "background": {
     "scripts": [
       "/background/background.js",
@@ -17,8 +24,7 @@
       "/background/homepage.js",
       "/background/interests.js",
       "/background/google_activity.js",
-      "/background/subscribed_channels.js",
-      "/background/keyword_search_experiment.js"
+      "/background/subscribed_channels.js"
     ],
     "persistent": false
   },
