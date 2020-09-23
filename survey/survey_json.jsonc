@@ -1,0 +1,92 @@
+{
+ "pages": [
+  {
+   "name": "page1",
+   "elements": [
+    {
+     "type": "text",
+     "name": "question1",
+     "title": "What is your age?",
+     "isRequired": true,
+     "inputType": "number",
+     "min": "18",
+     "max": "100"
+    },
+    {
+     "type": "radiogroup",
+     "name": "question2",
+     "title": "What are your political party affiliations?",
+     "isRequired": true,
+     "requiredErrorText": "You must select one political party affiliation!",
+     "choices": [
+      {
+       "value": "item1",
+       "text": "Democrat"
+      },
+      {
+       "value": "item2",
+       "text": "Republican"
+      },
+      {
+       "value": "item3",
+       "text": "Third Party"
+      },
+      {
+       "value": "item4",
+       "text": "Undecided"
+      }
+     ]
+    },
+    {
+     "type": "radiogroup",
+     "name": "question3",
+     "title": "Which state are you from?",
+     "isRequired": true,
+     "choices": [
+      {
+       "value": "item1",
+       "text": "Texas"
+      },
+      {
+       "value": "item2",
+       "text": "Florida"
+      },
+      {
+       "value": "item3",
+       "text": "Pennsylvania"
+      },
+      {
+       "value": "item4",
+       "text": "Ohio"
+      },
+      {
+       "value": "item5",
+       "text": "Michigan"
+      },
+      {
+       "value": "item6",
+       "text": "Georgia"
+      },
+      {
+       "value": "item7",
+       "text": "North-Carolina"
+      },
+      {
+       "value": "item8",
+       "text": "Arizona"
+      },
+      {
+       "value": "item9",
+       "text": "Wisconsin"
+      },
+      {
+       "value": "item10",
+       "text": "Minnesota"
+      }
+     ]
+    }
+   ],
+   "title": "Elections 2020 Survey"
+  }
+ ]
+}

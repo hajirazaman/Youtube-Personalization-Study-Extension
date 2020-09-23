@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>YouTube Personalization Study</title>
+    <script src="/libraries/survey-react/react.js"></script>
+    <script src="/libraries/survey-react/react-dom.js"></script>
+    <script src="/libraries/survey-react/browser.js" charset="utf-8" ></script>
+    <script src="/libraries/survey-react/survey.react.js"></script>
+	<script src="/libraries/lz-string.js"></script>
+	<script src="/libraries/jszip.js"></script>
+	<script src="/libraries/fs.js"></script>
+    <!-- <script src="lib.js"></script> -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap@3.3.7/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/survey/survey_css.css">
+
+</head>
+<body>
+	<div class="container-fluid text-left"><!-- alignment -->
+		<div class="row">
+			<div class="col-sm-1"></div>
+			<div class="col-sm-10">
+		    	<div id="surveyElement"></div>
+				<div id="surveyResult"></div>
+				<div id="surveyJson"></div>
+				<script type="text/babel" src="/survey/survey_js.js"></script>	
+			</div>
+			<div class="col-sm-1"></div>
+		</div>
+	</div>
+</body>
+</html>

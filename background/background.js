@@ -11,8 +11,31 @@ DONE_STATUSES = {
 	"HOMEPAGE_DONE": false,
 	"INTERESTS_DONE": false,
 	"SUBSCRIBERS_DONE": false,
-	"SEARCHDATA_DONE": true
+	"SURVEYDATA_DONE": false,
 };
+
+// For Survey
+chrome.browserAction.onClicked.addListener(function () {
+    console.log("Clicked Browser Action Icon")
+	chrome.tabs.create({
+		    	url: chrome.extension.getURL('/survey/survey_html.html'),
+		    	active: true
+		  	}, function(tab) {
+				surveyTabId = tab.id;
+		    });
+});
+
+chrome.runtime.onMessage.addListener(
+	function(request, sender, sendResponse) {
+	  if(request.type == "init"){
+		chrome.tabs.sendMessage(surveyTabId, {"type":"logStatus" , "msgg": "Survey Started"});
+	  }
+	  if(request.type == "surveyResult"){
+		console.log(request.data);
+		person.surveyData = request.data;
+		DONE_STATUSES.SURVEYDATA_DONE = true;
+   }
+})
 
 function sleep(ms) {
 	return new Promise(resolve => setTimeout(resolve, ms));
@@ -26,7 +49,7 @@ function loggedInGoogleCheck(extentionOnClick){
 	chrome.cookies.get({url:'https://accounts.google.com', name:'LSID'}, function(cookie){
 		if (cookie) {
 			loggedInGoogle = true;
-			console.log('Sign-in cookie:', cookie);
+			// console.log('Sign-in cookie:', cookie);
 		}
 		else {
 			if (extentionOnClick)
