@@ -3,8 +3,7 @@ console.log("loading")
 chrome.runtime.sendMessage({type:'init', data:'making sure that this content script has been injected'});
 
 window.survey = new Survey.Model({
-
-  title: "YouTube Personalization Study", showProgressBar: "bottom", goNextPageAutomatic: false, showNavigationButtons: true, 
+  title: "Election 2020 Survey", showProgressBar: "bottom", goNextPageAutomatic: false, showNavigationButtons: true, 
   showQuestionNumbers: 'off',
   "pages": [
     {

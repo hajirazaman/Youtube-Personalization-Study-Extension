@@ -10,20 +10,9 @@ DONE_STATUSES = {
 	"GOOGLEACTIVITY_DONE": false,
 	"HOMEPAGE_DONE": false,
 	"INTERESTS_DONE": false,
-	"SUBSCRIBERS_DONE": false,
 	"SURVEYDATA_DONE": false,
+	"SUBSCRIBERS_DONE": false
 };
-
-// For Survey
-chrome.browserAction.onClicked.addListener(function () {
-    console.log("Clicked Browser Action Icon")
-	chrome.tabs.create({
-		    	url: chrome.extension.getURL('/survey/survey_html.html'),
-		    	active: true
-		  	}, function(tab) {
-				surveyTabId = tab.id;
-		    });
-});
 
 chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {
@@ -45,11 +34,15 @@ function allDone() {
 	return Object.keys(DONE_STATUSES).every((k) => DONE_STATUSES[k]);
 }
 
+function resetDones() {
+	Object.keys(DONE_STATUSES).forEach(v => DONE_STATUSES[v] = false)
+}
+
 function loggedInGoogleCheck(extentionOnClick){
 	chrome.cookies.get({url:'https://accounts.google.com', name:'LSID'}, function(cookie){
 		if (cookie) {
 			loggedInGoogle = true;
-			// console.log('Sign-in cookie:', cookie);
+			console.log('Sign-in cookie:', cookie);
 		}
 		else {
 			if (extentionOnClick)
@@ -66,7 +59,7 @@ function loggedInGoogleCheck(extentionOnClick){
 // lagging out in the middle of collecting data
 chrome.cookies.onChanged.addListener(async function(info) {
 	var cookie_info = JSON.stringify(info);
-	console.log(cookie_info);
+	// console.log(cookie_info);
 	loggedInGoogleCheck(false);
 	while (!loggedInGoogle) {
 		await sleep(100);
@@ -81,16 +74,29 @@ chrome.browserAction.onClicked.addListener(async function(){
 		await sleep(100);
 	}
 	await sleep(5000);
+	
+	// survey
+	chrome.tabs.create({
+		url: chrome.extension.getURL('/survey/survey_html.html'),
+		active: true
+	  }, function(tab) {
+		surveyTabId = tab.id;
+	});
+	// google_activity background script
 	triggerCrawlGoogleActivity();
+	// interests background script
 	getInterestData();
+	// homepage background script
 	collectHomePageData();
+	// subscribed_channels background script
 	crawlSubscribedChannels();
-	// getSearchData("HELLO & bello");
+	
 	while (!allDone()) {
 		console.log(DONE_STATUSES);
 		await sleep(5000);
 	}
 	downloadFile();
+	resetDones();
 });
 
 function downloadZippedJson(json_data) {
