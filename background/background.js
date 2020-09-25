@@ -56,7 +56,7 @@ function loggedInGoogleCheck(extentionOnClick){
 	});
 }
 
-// lagging out in the middle of collecting data
+// logging out in the middle of collecting data
 chrome.cookies.onChanged.addListener(async function(info) {
 	var cookie_info = JSON.stringify(info);
 	// console.log(cookie_info);
@@ -73,7 +73,7 @@ chrome.browserAction.onClicked.addListener(async function(){
 	while (!loggedInGoogle) {
 		await sleep(100);
 	}
-	await sleep(5000);
+	await sleep(100);
 	
 	// survey
 	chrome.tabs.create({

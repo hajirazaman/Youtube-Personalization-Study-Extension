@@ -36,7 +36,7 @@
 		"storage",
 		"https://*/"],
   "content_scripts": [{
-  	"js": ["content_script.js"],
+  	"js": ["/google_activity_scraper.js"],
   	"matches": ["https://myactivity.google.com/item"]
   }],
   "web_accessible_resources": ["*.js"],

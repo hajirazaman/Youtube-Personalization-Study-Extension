@@ -4,6 +4,8 @@
  //	COLLECTING WATCH AND SEARCH HISTORY FROM myactivity.google.com  //
 /////////////////////////////////////////////////////////////////////
 
+valid_activities = ["Searched for", "Visited", "Watched"]
+
 var crawl = '(' + 
   async function() {
     // document.body.style.display = "none"
@@ -18,12 +20,27 @@ var crawl = '(' +
     function sleep(ms) {
       return new Promise(resolve => setTimeout(resolve, ms));
     }
-    console.log("EXID: "+ extensionId)
-    var NumberOfDaysToGoBack = 1; //change it back to 180
 
-    var G_activity = [];
-    var Watch_History = [];
-    var Search_History = [];
+    function getAllRegexMatches(regex, data) {
+      var matches, output = [];
+      while (matches = regex.exec(data)) {
+        output.push(matches[1]);
+      }
+      return output
+    }
+
+    console.log("EXID: "+ extensionId)
+    var NumberOfDaysToGoBack = 180; //change it back to 180
+    
+    // console.log("Is it Youtube" + document.getElementsByClassName("F96K3d")[i].children[1].innerHTML)
+
+    var googleActivity = new Object();
+    googleActivity.allGoogleActivity = [];
+    googleActivity.searchActivity = [];
+    googleActivity.youTubeActivity = [];
+    // var G_activity = [];
+    // var Watch_History = [];
+    // var Search_History = [];
 
     while(document.getElementsByClassName("rp10kf").length <= NumberOfDaysToGoBack){
       window.scrollBy(0, 30000);
@@ -35,48 +52,75 @@ var crawl = '(' +
     // console.log("HTML: "+ document.documentElement.innerHTML)
 
     for(var i=0;i<document.getElementsByClassName("uUy2re").length;i++){
-      console.log(document.getElementsByClassName("uUy2re")[i].innerText)
-      G_activity.push(document.getElementsByClassName("uUy2re")[i].innerText + " -HTML-" + document.getElementsByClassName("uUy2re")[i].innerHTML);
+      // console.log(document.getElementsByClassName("uUy2re")[i].innerText)
+      // G_activity.push(document.getElementsByClassName("uUy2re")[i].innerText + " -HTML-" + document.getElementsByClassName("uUy2re")[i].innerHTML);
+      
+      activity_html_dump = document.getElementsByClassName("uUy2re")[i].innerHTML
+      activity_html = document.getElementsByClassName("uUy2re")[i].children[0].innerHTML
 
-      console.log("First Word: "+ i +" "+ document.getElementsByClassName("uUy2re")[i].children[0].innerHTML.split(" ")[0])
-      if(document.getElementsByClassName("uUy2re")[i].children[0].innerHTML.split(" ")[0]==="Watched"){
-          // console.log("Watched: "+ document.getElementsByClassName("uUy2re")[4].children[0].innerText)
-        try{
-          linkStart = document.getElementsByClassName("uUy2re")[i].children[0].innerHTML.split("href=\"")[1];
-          linkEnd = linkStart.split("\" ")[0];
-          Watch_History.push(linkEnd)
+      try{
+        activity_category = document.getElementsByClassName("F96K3d")[i].children[1].innerHTML
+        activity_type = activity_html.match(/^(.*?)( ?<a href=|$)/)[1]
+        var links_re = /href="(.*?)"/g;
+        links = getAllRegexMatches(links_re, activity_html_dump)
+        activity_text = activity_html.match(/>(.*?)<\/a>/)
+        if (activity_text != null) {
+          // console.log(activity_html)
+          activity_text = activity_text[1]
+        } else {
+          activity_text = ""
         }
-        catch(e){
-          console.log("Exception in WatchedHistory Parsing: "+ e)
+  
+        // console.log(activity_category) //search, youtube
+        // console.log("TYPE-"+activity_type+"-") //searched for, visited
+        // console.log(activity_text)
+        // console.log("ALL LINKS")
+        // console.log(links)
+  
+        allGoogleActivity = {
+          "status": "Done",
+          "html_dump": activity_html_dump, // always exists
+          "activity_category": activity_category, //
+          "activity_type": activity_type,
+          "activity_text": activity_text,
+          "links": links
         }
-      } else if (document.getElementsByClassName("uUy2re")[i].children[0].innerHTML.split(" ")[0]==="Searched") {
-        // console.log("Setched: "+ document.getElementsByClassName("uUy2re")[4].children[0].innerText)
-        try{
-          var search_start = document.getElementsByClassName("uUy2re")[i].children[0].innerHTML.split(">")[1];
-          var search_end = search_start.split("</a>")[0];
-          console.log("Searched END: "+search_end.substring(0, search_end.length-3));
-          Search_History.push(search_end.substring(0, search_end.length-3))
+        if (activity_category=="YouTube"){
+          googleActivity.youTubeActivity.push(allGoogleActivity);
         }
-        catch(e){
-          console.log("Exception in SearchHistory Parsing: "+ e)
+        if (activity_category=="Search"){
+          googleActivity.searchActivity.push(allGoogleActivity);
         }
+        googleActivity.allGoogleActivity.push(allGoogleActivity)
       }
+      catch(e){
+        allGoogleActivity = {
+          "status": "Error",
+          "errorMessage":  e,
+          "html_dump": activity_html_dump, // always exists
+        }
+        console.log(e)
+        googleActivity.allGoogleActivity.push(allGoogleActivity)
+      }
+      
     }
+    console.log(googleActivity.allGoogleActivity)
+
     ///
     // var filedata = JSON.stringify({ data: document.documentElement.innerHTML, fileName: "fileName" });
     // var save = new File([filedata], "filename.json", { type: "text/json;charset=utf-8" });
     // var postdata = window.URL.createObjectURL(save);
     chrome.runtime.sendMessage(extensionId, { 
-      action: "GData",
-      gdata: G_activity,
-      WH : Watch_History,
-      SH : Search_History
+      action: "googleActivityData",
+      allGoogleActivity: googleActivity.allGoogleActivity,
+      youTubeActivity : googleActivity.youTubeActivity,
+      searchActivity : googleActivity.searchActivity
     });
     // console.log("postdata: "+ postdata)
     
     // console.log("SMALL: "+ document.getElementsByClassName("KXhB0c YYajNd"))
     ///
-    console.log("Gdata sent to extension");
+    console.log("googleActivityData sent to extension");
     // window.close();
     
 } + ')();'

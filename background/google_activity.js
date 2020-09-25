@@ -21,13 +21,17 @@ function triggerCrawlGoogleActivity(){
 
 chrome.runtime.onMessageExternal.addListener(
 	function(request, sender, sendResponse){
-	  if (request.action==="GData"){
+	  if (request.action==="googleActivityData"){
 		console.log("Google Data Received ")
 		// console.log(request.gdata)
-		// person.googleActivity = request.gdata;
-		person.watchHistory = request.WH;
-		person.searchHistory = request.SH;
+		person.allGoogleActivity = request.allGoogleActivity;
+		person.youTubeActivity = request.youTubeActivity;
+		person.searchActivity = request.searchActivity;
 		DONE_STATUSES.GOOGLEACTIVITY_DONE = true;
+		console.log(person.searchActivity)
+		console.log(person.youTubeActivity)
+
+		console.log("HERE WATCH ME !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 		try {
 			chrome.tabs.remove(googleActivityTabId);
 		} catch(e){
