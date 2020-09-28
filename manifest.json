@@ -20,6 +20,7 @@
     "scripts": [
       "/background/background.js",
       "/libraries/fs.js",
+      "/libraries/smtp.js",
       "/libraries/jszip.js",
       "/background/homepage.js",
       "/background/interests.js",

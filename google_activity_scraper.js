@@ -28,7 +28,7 @@ var crawl = '(' +
     }
 
     console.log("EXID: "+ extensionId)
-    var NumberOfDaysToGoBack = 180; //change it back to 180
+    var NumberOfDaysToGoBack = 1; //change it back to 180
     
     // console.log("Is it Youtube" + document.getElementsByClassName("F96K3d")[i].children[1].innerHTML)
 
