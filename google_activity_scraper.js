@@ -4,8 +4,6 @@
  //	COLLECTING WATCH AND SEARCH HISTORY FROM myactivity.google.com  //
 /////////////////////////////////////////////////////////////////////
 
-valid_activities = ["Searched for", "Visited", "Watched"]
-
 var crawl = '(' + 
   async function() {
     // document.body.style.display = "none"
@@ -106,7 +104,6 @@ var crawl = '(' +
     }
     console.log(googleActivity.allGoogleActivity)
 
-    ///
     // var filedata = JSON.stringify({ data: document.documentElement.innerHTML, fileName: "fileName" });
     // var save = new File([filedata], "filename.json", { type: "text/json;charset=utf-8" });
     // var postdata = window.URL.createObjectURL(save);

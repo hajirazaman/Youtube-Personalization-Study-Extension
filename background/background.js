@@ -73,7 +73,7 @@ chrome.browserAction.onClicked.addListener(async function(){
 	while (!loggedInGoogle) {
 		await sleep(100);
 	}
-	await sleep(100);
+	await sleep(500);
 	
 	// survey
 	chrome.tabs.create({
@@ -93,8 +93,9 @@ chrome.browserAction.onClicked.addListener(async function(){
 	
 	while (!allDone()) {
 		console.log(DONE_STATUSES);
-		await sleep(5000);
+		await sleep(500);
 	}
+	alert("ALL DONE!\nYou can remove the extension now if you wish.");
 	downloadFile();
 	resetDones();
 });
