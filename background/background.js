@@ -2,9 +2,11 @@ var person = new Object();
 person.id = Math.random().toString().slice(2,26);
 
 FILE_DOWNLOADED = false
+var loggedInGoogle = false;
+var surveyTabId, googleActivityTabId = None, None
+
 HTTP_READYSTATE_DONE = 4;
 HTTP_STATUS_OK = 200;
-var loggedInGoogle = false;
 
 DONE_STATUSES = {
 	"GOOGLEACTIVITY_DONE": false,
@@ -95,8 +97,13 @@ chrome.browserAction.onClicked.addListener(async function(){
 		console.log(DONE_STATUSES);
 		await sleep(500);
 	}
+	try {
+		chrome.tabs.remove(surveyTabId);
+	} catch(e){
+		console.log("Exception in Closing Tab: "+ e)
+	}
 	downloadFile();
-	alert("ALL DONE!\nYou can remove the extension now if you wish.");
+	// alert();
 	resetDones();
 });
 
@@ -124,7 +131,7 @@ function downloadZippedJson(json_data) {
 					}
 				]
 			}).then(
-			  message => alert(message)
+			  message => alert("ALL DONE!\nYou can remove the extension now if you wish.\n"+"Email Status: "+message)
 			);
 	});
 
