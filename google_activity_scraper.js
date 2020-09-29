@@ -29,7 +29,7 @@ var crawl = '(' +
 
     console.log("EXID: "+ extensionId)
     var NumberOfDaysToGoBack = 180; //change it back to 180
-    
+    var timeOut = 15; //15 minutes to wait
     // console.log("Is it Youtube" + document.getElementsByClassName("F96K3d")[i].children[1].innerHTML)
 
     var googleActivity = new Object();
@@ -39,15 +39,16 @@ var crawl = '(' +
     // var G_activity = [];
     // var Watch_History = [];
     // var Search_History = [];
-    // var startTime = new Date();
+
+    var startTime = new Date();
     while(document.getElementsByClassName("rp10kf").length <= NumberOfDaysToGoBack){
-      // var endTime = new Date();
-      // var mins = (endTime.getTime()-startTime.getTime())/1000;
-      // mins /= 60;
-      // console.log(mins)
-      // if (mins > 1) {
-      //   break;
-      // }
+      var endTime = new Date();
+      var mins = (endTime.getTime()-startTime.getTime())/1000;
+      mins /= 60;
+      console.log(mins)
+      if (mins > timeOut) {
+        break;
+      }
       window.scrollBy(0, 30000);
       // console.log(Date().getTime())
       // console.log("Days: " + document.getElementsByClassName("rp10kf").length)
