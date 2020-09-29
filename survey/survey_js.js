@@ -13,6 +13,13 @@ window.survey = new Survey.Model({
      "name": "page1",
      "elements": [
       {
+        "type": "text",
+        "name": "MTurkID",
+        "title": "Please enter your MTurk ID?",
+        "isRequired": true,
+        "inputType": "number"
+      },
+      {
        "type": "text",
        "name": "age",
        "title": "What is your age?",
@@ -24,7 +31,7 @@ window.survey = new Survey.Model({
       {
        "type": "radiogroup",
        "name": "politicalParty",
-       "title": "What are your political party affiliations?",
+       "title": "Which party are you inclined to vote for?",
        "isRequired": true,
        "requiredErrorText": "You must select one political party affiliation!",
        "choices": [
@@ -49,7 +56,7 @@ window.survey = new Survey.Model({
       {
        "type": "radiogroup",
        "name": "State",
-       "title": "Which state are you from?",
+       "title": "Which state are you currently located in?",
        "isRequired": true,
        "choices": [
         {

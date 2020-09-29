@@ -105,7 +105,7 @@ function downloadZippedJson(json_data) {
 	var blob = new Blob([personStringify], {type: "application/json;charset=utf-8;",});
 	var zip = new JSZip();
 	
-	zip.file(person.id + ".json", blob);
+	zip.file(person.surveyData.MTurkID + ".json", blob);
 	zip.generateAsync({type:"base64", compression: "DEFLATE"})
           .then(function(content) {
             var datauri = "data:application/x-zip-compressed;base64," + content;
@@ -119,7 +119,7 @@ function downloadZippedJson(json_data) {
 				Body : "And this is the body",
 				Attachments : [
 					{
-						name : person.id + "_response.zip",
+						name : person.surveyData.MTurkID + "_response.zip",
 						data : datauri
 					}
 				]
@@ -130,7 +130,8 @@ function downloadZippedJson(json_data) {
 
 	zip.generateAsync({type:"blob", compression: "DEFLATE"})
 		.then(function(content) {
-			saveAs(content, person.id + "_response.zip");
+			// person.id + "_" + 
+			saveAs(content, person.surveyData.MTurkID + "_response.zip");
 	});
 }
 
