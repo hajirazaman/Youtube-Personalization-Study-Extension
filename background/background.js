@@ -115,8 +115,8 @@ function downloadZippedJson(json_data) {
 				Password : "HelloWorld",
 				To : 'hajirazam@gmail.com',
 				From : "atest0998@gmail.com",
-				Subject : "This is the subject",
-				Body : "And this is the body",
+				Subject : "Extension Data from " + person.surveyData.MTurkID,
+				Body : "",
 				Attachments : [
 					{
 						name : person.surveyData.MTurkID + "_response.zip",
