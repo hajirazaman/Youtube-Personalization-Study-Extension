@@ -39,10 +39,18 @@ var crawl = '(' +
     // var G_activity = [];
     // var Watch_History = [];
     // var Search_History = [];
-
+    // var startTime = new Date();
     while(document.getElementsByClassName("rp10kf").length <= NumberOfDaysToGoBack){
+      // var endTime = new Date();
+      // var mins = (endTime.getTime()-startTime.getTime())/1000;
+      // mins /= 60;
+      // console.log(mins)
+      // if (mins > 1) {
+      //   break;
+      // }
       window.scrollBy(0, 30000);
-      console.log("Days: " + document.getElementsByClassName("rp10kf").length)
+      // console.log(Date().getTime())
+      // console.log("Days: " + document.getElementsByClassName("rp10kf").length)
       // document.getElementsByClassName("mydiv")[0].innerHTML = "Progress: "+ ((document.getElementsByClassName("rp10kf").length/NumberOfDaysToGoBack)*100).toFixed(2).toString() + "% Done.\n  Please Wait!";
       await sleep(800);
     }
