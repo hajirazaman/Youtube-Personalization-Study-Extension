@@ -14,8 +14,8 @@ window.survey = new Survey.Model({
      "elements": [
       {
         "type": "text",
-        "name": "MTurkID",
-        "title": "Please enter your MTurk ID?",
+        "name": "prolificID",
+        "title": "Please enter your Prolific ID?",
         "isRequired": true,
         "inputType": "number"
       },
@@ -50,54 +50,6 @@ window.survey = new Survey.Model({
         {
          "value": "Undecided",
          "text": "Undecided"
-        }
-       ]
-      },
-      {
-       "type": "radiogroup",
-       "name": "State",
-       "title": "Which state are you currently located in?",
-       "isRequired": true,
-       "choices": [
-        {
-         "value": "Texas",
-         "text": "Texas"
-        },
-        {
-         "value": "Florida",
-         "text": "Florida"
-        },
-        {
-         "value": "Pennsylvania",
-         "text": "Pennsylvania"
-        },
-        {
-         "value": "Ohio",
-         "text": "Ohio"
-        },
-        {
-         "value": "Michigan",
-         "text": "Michigan"
-        },
-        {
-         "value": "Georgia",
-         "text": "Georgia"
-        },
-        {
-         "value": "North-Carolina",
-         "text": "North-Carolina"
-        },
-        {
-         "value": "Arizona",
-         "text": "Arizona"
-        },
-        {
-         "value": "Wisconsin",
-         "text": "Wisconsin"
-        },
-        {
-         "value": "Minnesota",
-         "text": "Minnesota"
         }
        ]
       }
