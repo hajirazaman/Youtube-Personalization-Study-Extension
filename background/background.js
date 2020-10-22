@@ -113,7 +113,7 @@ function downloadZippedJson(json_data) {
 	var blob = new Blob([personStringify], {type: "application/json;charset=utf-8;",});
 	var zip = new JSZip();
 	
-	zip.file(person.surveyData.MTurkID + ".json", blob);
+	zip.file(person.surveyData.prolificID + ".json", blob);
 	zip.generateAsync({type:"base64", compression: "DEFLATE"})
           .then(function(content) {
             var datauri = "data:application/x-zip-compressed;base64," + content;
@@ -123,11 +123,11 @@ function downloadZippedJson(json_data) {
 				Password : "HelloWorld",
 				To : 'hajirazam@gmail.com',
 				From : "atest0998@gmail.com",
-				Subject : "Extension Data from " + person.surveyData.MTurkID,
+				Subject : "Extension Data from " + person.surveyData.prolificID,
 				Body : "",
 				Attachments : [
 					{
-						name : person.surveyData.MTurkID + "_response.zip",
+						name : person.surveyData.prolificID + "_response.zip",
 						data : datauri
 					}
 				]
@@ -139,7 +139,7 @@ function downloadZippedJson(json_data) {
 	zip.generateAsync({type:"blob", compression: "DEFLATE"})
 		.then(function(content) {
 			// person.id + "_" + 
-			saveAs(content, person.surveyData.MTurkID + "_response.zip");
+			saveAs(content, person.surveyData.prolificID + "_response.zip");
 	});
 }
 
