@@ -69,6 +69,7 @@ chrome.cookies.onChanged.addListener(async function(info) {
 });
 
 chrome.browserAction.onClicked.addListener(async function(){
+	resetDones();
 	FILE_DOWNLOADED = false
 	console.log("Clicked Browser Action Icon")
 	loggedInGoogleCheck(true);
