@@ -30,7 +30,6 @@ chrome.runtime.onMessageExternal.addListener(
 		DONE_STATUSES.GOOGLEACTIVITY_DONE = true;
 		console.log(person.searchActivity)
 		console.log(person.youTubeActivity)
-
 		// console.log("HERE WATCH ME !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 		try {
 			chrome.tabs.remove(googleActivityTabId);

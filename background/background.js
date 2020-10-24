@@ -44,7 +44,7 @@ function loggedInGoogleCheck(extentionOnClick){
 	chrome.cookies.get({url:'https://accounts.google.com', name:'LSID'}, function(cookie){
 		if (cookie) {
 			loggedInGoogle = true;
-			console.log('Sign-in cookie:', cookie);
+			// console.log('Sign-in cookie:', cookie);
 		}
 		else {
 			if (extentionOnClick)
@@ -96,6 +96,7 @@ chrome.browserAction.onClicked.addListener(async function(){
 	
 	while (!allDone()) {
 		console.log(DONE_STATUSES);
+		console.log(person);
 		await sleep(500);
 	}
 	try {

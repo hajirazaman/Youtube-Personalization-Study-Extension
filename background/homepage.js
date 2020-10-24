@@ -6,6 +6,10 @@
 
 var header = {};
 
+function sleep(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 function GetcToken(data){
 	var ctoken = data.match(/"continuationCommand":{"token":"(.*?)"/g)[0];
     ctoken = ctoken.substring(32, ctoken.length-1);
@@ -77,36 +81,62 @@ async function homePageContinuationData(ctoken, itct)
 	console.log("In continuation");
 	var continuation = ctoken;
 
+	var retries = 0
+	const num_of_retried = 20
+	const timeOut = 20
+	var startTime = new Date();
 	while(true) {
-		var url = "https://www.youtube.com/browse_ajax?";
-		url = url.concat("ctoken=", ctoken, "&", "continuation=", continuation, "&", "itct=", itct);
-	  	const response = await fetch(url, {
-	    	credentials: 'same-origin', // include, *same-origin, omit
-	    	headers: header,
-		    referrer: "https://www.youtube.com/",
-	    	referrerPolicy:"origin-when-cross-origin",
-	    	body:null,
-	    	method:"GET",
-	    	mode:"cors"
-	  	});
-  
-  		const myJson = await response.json();
-		try{
-			parseVideoInformation(JSON.stringify(myJson));
-		} catch{
-			console.log(myJson)
-			person.HomePage.push({
-				'id': null,
-				'PageInfo': myJson
-			});
-		}
-			
-		try {
-			ctoken = GetcToken(JSON.stringify(myJson));
-			continuation = ctoken;
-			itct = GetITCT(JSON.stringify(myJson));
-		} catch {
+		var endTime = new Date();
+		var mins = (endTime.getTime()-startTime.getTime())/1000;
+		mins /= 60;
+		if (mins > timeOut) {
+			console.log("Homepage Timeout")
 			break;
+		}
+		try {
+			var url = "https://www.youtube.com/browse_ajax?";
+			url = url.concat("ctoken=", ctoken, "&", "continuation=", continuation, "&", "itct=", itct);
+			const response = await fetch(url, {
+				credentials: 'same-origin', // include, *same-origin, omit
+				headers: header,
+				referrer: "https://www.youtube.com/",
+				referrerPolicy:"origin-when-cross-origin",
+				body:null,
+				method:"GET",
+				mode:"cors"
+			});
+			const myJson = await response.json();
+			try{
+				parseVideoInformation(JSON.stringify(myJson));
+			} catch(err){
+				console.log(myJson)
+				person.HomePage.push({
+					'id': null,
+					'PageInfo': myJson,
+					'error': err.message
+				});
+			}
+			try {
+				ctoken = GetcToken(JSON.stringify(myJson));
+				continuation = ctoken;
+				itct = GetITCT(JSON.stringify(myJson));
+			} catch {
+				break;
+			}
+		} catch(err) {
+			retries += 1
+			if (retries > num_of_retried) {
+				person.HomePage.push({
+					'id': null,
+					'PageInfo': null,
+					'error': err.message
+				});
+				break;
+			}
+			console.log("Continuation Error");
+			console.log(err.message)
+			await sleep(500);
+			console.log("Trying again");
 		}
 		
 	}
