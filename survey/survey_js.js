@@ -17,7 +17,6 @@ window.survey = new Survey.Model({
         "name": "prolificID",
         "title": "Please enter your Prolific ID?",
         "isRequired": true,
-        "inputType": "number"
       },
       {
        "type": "text",

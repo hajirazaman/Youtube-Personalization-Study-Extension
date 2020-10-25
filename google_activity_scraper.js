@@ -45,6 +45,7 @@ var crawl = '(' +
       var endTime = new Date();
       var mins = (endTime.getTime()-startTime.getTime())/1000;
       mins /= 60;
+      console.log("MINUTES")
       console.log(mins)
       if (mins > timeOut) {
         break;
