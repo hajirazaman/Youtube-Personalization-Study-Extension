@@ -29,7 +29,7 @@ var crawl = '(' +
 
     console.log("EXID: "+ extensionId)
     var NumberOfDaysToGoBack = 180; //change it back to 180
-    var timeOut = 1; //20 minutes to wait
+    var timeOut = 20; //20 minutes to wait
     // console.log("Is it Youtube" + document.getElementsByClassName("F96K3d")[i].children[1].innerHTML)
 
     var googleActivity = new Object();
