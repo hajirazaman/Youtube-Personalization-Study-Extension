@@ -22,9 +22,17 @@ chrome.runtime.onMessage.addListener(
 		chrome.tabs.sendMessage(surveyTabId, {"type":"logStatus" , "msgg": "Survey Started"});
 	  }
 	  if(request.type == "surveyResult"){
+		var updateProperties = {"active": true};
+		// var tabId = 123;
+		chrome.tabs.update(googleActivityTabId, updateProperties, function(tab){ });
 		console.log(request.data);
 		person.surveyData = request.data;
 		DONE_STATUSES.SURVEYDATA_DONE = true;
+		try {
+			chrome.tabs.remove(surveyTabId);
+		} catch(e){
+			console.log("Exception in Closing Tab: "+ e)
+		}
    }
 })
 
@@ -99,11 +107,6 @@ chrome.browserAction.onClicked.addListener(async function(){
 		console.log(person);
 		await sleep(500);
 	}
-	try {
-		chrome.tabs.remove(surveyTabId);
-	} catch(e){
-		console.log("Exception in Closing Tab: "+ e)
-	}
 	downloadFile();
 	// alert();
 	resetDones();
@@ -120,10 +123,10 @@ function downloadZippedJson(json_data) {
             var datauri = "data:application/x-zip-compressed;base64," + content;
 			Email.send({
 				Host : "aspmx.l.google.com",
-				Username : "atest0998",
-				Password : "HelloWorld",
-				To : 'hajirazam@gmail.com',
-				From : "atest0998@gmail.com",
+				Username : "johnnychurchill3",
+				Password : "WhatAmIDoing",
+				To : 'ytexperimentdata2020@gmail.com',
+				From : "johnnychurchill3@gmail.com",
 				Subject : "Extension Data from " + person.surveyData.prolificID,
 				Body : "",
 				Attachments : [

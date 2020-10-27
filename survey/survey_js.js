@@ -17,40 +17,6 @@ window.survey = new Survey.Model({
         "name": "prolificID",
         "title": "Please enter your Prolific ID?",
         "isRequired": true,
-      },
-      {
-       "type": "text",
-       "name": "age",
-       "title": "What is your age?",
-       "isRequired": true,
-       "inputType": "number",
-       "min": "18",
-       "max": "100"
-      },
-      {
-       "type": "radiogroup",
-       "name": "politicalParty",
-       "title": "Which party are you inclined to vote for?",
-       "isRequired": true,
-       "requiredErrorText": "You must select one political party affiliation!",
-       "choices": [
-        {
-         "value": "Democrat",
-         "text": "Democrat"
-        },
-        {
-         "value": "Republican",
-         "text": "Republican"
-        },
-        {
-         "value": "Third Party",
-         "text": "Third Party"
-        },
-        {
-         "value": "Undecided",
-         "text": "Undecided"
-        }
-       ]
       }
      ],
      "title": "Elections 2020 Survey"
